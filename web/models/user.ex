@@ -25,8 +25,8 @@ defmodule CommodityGameApi.User do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:username, :email, :password, :currency_units])
-    |> validate_required([:username, :email, :password, :currency_units])
+    |> cast(params, [:username, :email, :password])
+    |> validate_required([:username, :email, :password])
     |> unique_constraint(:username)
     |> unique_constraint(:email)
     |> validate_length(:password, min: 6, max: 30)

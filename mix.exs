@@ -41,7 +41,8 @@ defmodule CommodityGameApi.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:comeonin, "~> 2.6"}
+      {:comeonin, "~> 2.6"},
+      {:cors_plug, "~> 1.2"},
     ]
   end
 

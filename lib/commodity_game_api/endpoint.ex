@@ -36,5 +36,7 @@ defmodule CommodityGameApi.Endpoint do
     key: "_commodity_game_api_key",
     signing_salt: "6zlWIxVL"
 
+  plug CORSPlug
+
   plug CommodityGameApi.Router
 end
