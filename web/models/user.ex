@@ -6,7 +6,7 @@ defmodule CommodityGameApi.User do
     field :email, :string
     field :password, :string, virtual: true
     field :password_hash, :string
-    field :currency_units, :integer
+    field :currency_units, :integer, default: 100
 
     timestamps()
   end

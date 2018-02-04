@@ -13,10 +13,13 @@ defmodule CommodityGameApi.UserController do
 
     case Repo.insert(changeset) do
       {:ok, user} ->
-        conn
+        new_conn = Guardian.Plug.api_sign_in(conn, user, :access)
+        jwt = Guardian.Plug.current_token(new_conn)
+
+        new_conn
         |> put_status(:created)
         |> put_resp_header("location", user_path(conn, :show, user))
-        |> render("show.json", user: user)
+        |> render(PhoenixUserAuthentication.SessionsView, "show.json", user: user, jwt: jwt)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

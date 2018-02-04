@@ -21,7 +21,7 @@ defmodule CommodityGameApi.Mixfile do
     [
       mod: {CommodityGameApi, []},
       extra_applications: [
-        :logger, :comeonin
+        :logger, :comeonin, :guardian
       ]
     ]
   end
@@ -43,6 +43,7 @@ defmodule CommodityGameApi.Mixfile do
       {:cowboy, "~> 1.0"},
       {:comeonin, "~> 2.6"},
       {:cors_plug, "~> 1.2"},
+      {:guardian, "~> 0.14"}
     ]
   end
 
