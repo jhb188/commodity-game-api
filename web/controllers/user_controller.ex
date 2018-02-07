@@ -19,7 +19,7 @@ defmodule CommodityGameApi.UserController do
         new_conn
         |> put_status(:created)
         |> put_resp_header("location", user_path(conn, :show, user))
-        |> render(PhoenixUserAuthentication.SessionsView, "show.json", user: user, jwt: jwt)
+        |> render(CommodityGameApi.SessionsView, "show.json", user: user, jwt: jwt)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

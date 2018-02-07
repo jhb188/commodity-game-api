@@ -1,6 +1,6 @@
 defmodule CommodityGameApi.SessionsController do
   use CommodityGameApi.Web, :controller
-  alias CommodityGameApi.Users
+  alias CommodityGameApi.User
 
   def create(conn, %{"username" => username, "password" => password}) do
     case authenticate(%{"username" => username, "password" => password}) do
@@ -17,7 +17,7 @@ defmodule CommodityGameApi.SessionsController do
   end
 
   defp authenticate(%{"username" => username, "password" => password}) do
-    user = Repo.get_by(Users, username: username)
+    user = Repo.get_by(User, username: username)
     case check_password(user, password) do
       true -> {:ok, user}
       _ -> :error

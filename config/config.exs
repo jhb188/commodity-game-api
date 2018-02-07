@@ -30,5 +30,5 @@ config :guardian, Guardian,
   issuer: "CommodityGameApi",
   ttl: {30, :days},
   verify_issuer: true,
-  serializer: CommodityGameApi.GuardianSerializer
+  serializer: CommodityGameApi.GuardianSerializer,
   secret_key: "F2vJUUR/Id9TZer8jETLPPAtRR6g+MOh/cicgpCGcUnqhalWlhiS8/HtRXOrI6w0"
