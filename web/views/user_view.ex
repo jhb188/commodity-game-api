@@ -13,7 +13,6 @@ defmodule CommodityGameApi.UserView do
     %{id: user.id,
       username: user.username,
       email: user.email,
-      password_hash: user.password_hash,
       currency_units: user.currency_units}
   end
 end
