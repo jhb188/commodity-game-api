@@ -3,25 +3,27 @@ defmodule CommodityGameApi.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
-    plug Guardian.Plug.LoadResource
   end
 
-  scope "/api", CommodityGameApi do
+  pipeline :authenticated do
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.LoadResource
+    plug Guardian.Plug.EnsureAuthenticated
+  end
+
+  scope "/api/v1", CommodityGameApi do
     pipe_through :api
 
-    post "/sessions", SessionsController, :create
-    delete "/sessions", SessionsController, :delete
+    post "/signup", UserController, :create
+    post "/login", SessionsController, :create
 
-    get "/users", UserController, :index
-    get "/users/:id", UserController, :show
-    post "/users", UserController, :create
+    pipe_through :authenticated
 
-    get "/commodity_sets", CommoditySetController, :index
+    get "/commodity-sets", CommoditySetController, :index
 
     get "/commodities", CommodityController, :index
 
-    get "/commodity_items", CommodityItemController, :index
+    get "/commodity-items", CommodityItemController, :index
 
     get "/sells", SellController, :index
     post "/sells", SellController, :create
