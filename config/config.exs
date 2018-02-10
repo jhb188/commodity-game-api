@@ -9,6 +9,9 @@ use Mix.Config
 config :commodity_game_api,
   ecto_repos: [CommodityGameApi.Repo]
 
+config :phoenix,
+  :format_encoders, json: ProperCase.JSONEncoder.CamelCase
+
 # Configures the endpoint
 config :commodity_game_api, CommodityGameApi.Endpoint,
   url: [host: "localhost"],

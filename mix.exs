@@ -48,6 +48,7 @@ defmodule CommodityGameApi.Mixfile do
       {:cors_plug, "~> 1.2"},
       {:guardian, "~> 0.14"},
       {:faker, "~> 0.9"},
+      {:proper_case, "~> 1.0.2"}
     ]
   end
 

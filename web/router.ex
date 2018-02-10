@@ -3,6 +3,7 @@ defmodule CommodityGameApi.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug ProperCase.Plug.SnakeCaseParams
   end
 
   pipeline :authenticated do
