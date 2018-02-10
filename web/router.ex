@@ -16,5 +16,18 @@ defmodule CommodityGameApi.Router do
     get "/users", UserController, :index
     get "/users/:id", UserController, :show
     post "/users", UserController, :create
+
+    get "/commodity_sets", CommoditySetController, :index
+
+    get "/commodities", CommodityController, :index
+
+    get "/commodity_items", CommodityItemController, :index
+
+    get "/sells", SellController, :index
+    post "/sells", SellController, :create
+    put "/sells", SellController, :update
+
+    get "/buys", BuyController, :index
+    post "/buys", BuyController, :create
   end
 end
