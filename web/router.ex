@@ -29,5 +29,8 @@ defmodule CommodityGameApi.Router do
 
     get "/buys", BuyController, :index
     post "/buys", BuyController, :create
+
+    get "/transactions", TransactionController, :index
+    post "/transactions", TransactionController, :create
   end
 end

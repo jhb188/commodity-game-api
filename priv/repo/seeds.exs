@@ -21,6 +21,7 @@ defmodule CommodityGameApi.DatabaseSeeder do
   alias CommodityGameApi.CommodityItem
   alias CommodityGameApi.Buy
   alias CommodityGameApi.Sell
+  alias CommodityGameApi.Transaction
 
   @models [
     User,
@@ -71,7 +72,6 @@ defmodule CommodityGameApi.DatabaseSeeder do
       user_id: user.id,
       commodity_id: commodity_id,
       amount: Enum.random(0..user.currency_units),
-      open: random_bool(),
     }
   end
 
@@ -81,18 +81,23 @@ defmodule CommodityGameApi.DatabaseSeeder do
       commodity_item_id: commodity_item.id,
       commodity_id: commodity_item.commodity_id,
       amount: Enum.random(1001..999999),
-      open: random_bool(),
     }
   end
 
-  def random_bool() do
-    Enum.random(0..1) == 1
+  def insert_transaction(commodity_item, buyer_id, seller_id) do
+    Repo.insert! %Transaction{
+      commodity_item_id: commodity_item.id,
+      commodity_id: commodity_item.commodity_id,
+      buyer_id: buyer_id,
+      seller_id: seller_id,
+      amount: Enum.random(1001..999999),
+    }
   end
 end
 
 CommodityGameApi.DatabaseSeeder.clear()
 
-users = for _ <- 1..1000,
+users = for _ <- 1..500,
   do: CommodityGameApi.DatabaseSeeder.insert_user()
 
 commodity_sets = for _ <- 1..20,
@@ -107,7 +112,7 @@ commodities = List.flatten(commodity_groups)
 
 # TODO: do this cleanly, without defining a temp variable
 commodity_item_groups = for c <- commodities,
-  do: for _ <- 1..Enum.random(2..1000),
+  do: for _ <- 1..(round(c.scarcity)),
     do: CommodityGameApi.DatabaseSeeder.insert_commodity_item(
       Enum.random(users).id,
       c.id
@@ -121,7 +126,22 @@ buys = for c <- commodities,
     do: CommodityGameApi.DatabaseSeeder.insert_buy(u, c.id)
 
 sells = for c <- commodities,
-  do: for u <- users, CommodityGameApi.DatabaseSeeder.random_bool(),
+  do: for u <- users, Enum.random(0..3) == 1,
     do: Enum.filter(commodity_items, fn ci -> ci.user_id == u.id && ci.commodity_id == c.id end)
       |> List.first
       |> (fn first_ci -> if first_ci != nil, do: CommodityGameApi.DatabaseSeeder.insert_sell(first_ci) end).()
+
+transactions = commodity_items
+  |> Enum.map(
+    fn ci -> 1..Enum.random(2..5)
+      |> Enum.map(
+        fn _ -> CommodityGameApi.DatabaseSeeder.insert_transaction(
+          ci,
+          Enum.random(users).id,
+          Enum.random(users).id
+        )
+        end
+      )
+    end
+  )
+  |> List.flatten
