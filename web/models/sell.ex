@@ -15,7 +15,7 @@ defmodule CommodityGameApi.Sell do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:amount, :open])
-    |> validate_required([:amount, :open])
+    |> cast(params, [:amount])
+    |> validate_required([:amount])
   end
 end

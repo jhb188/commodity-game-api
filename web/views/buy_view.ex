@@ -14,6 +14,6 @@ defmodule CommodityGameApi.BuyView do
       commodity_id: buy.commodity_id,
       user_id: buy.user_id,
       amount: buy.amount,
-      open: buy.open}
+    }
   end
 end

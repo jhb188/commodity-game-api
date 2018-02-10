@@ -15,6 +15,6 @@ defmodule CommodityGameApi.SellView do
       user_id: sell.user_id,
       commodity_item_id: sell.commodity_item_id,
       amount: sell.amount,
-      open: sell.open}
+    }
   end
 end
