@@ -4,6 +4,7 @@ defmodule CommodityGameApi.Commodity do
   schema "commodities" do
     field :name, :string
     field :scarcity, :decimal
+    field :image, :string
     belongs_to :commodity_set, CommodityGameApi.CommoditySet, foreign_key: :commodity_set_id
 
     timestamps()

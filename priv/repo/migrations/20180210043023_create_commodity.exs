@@ -5,7 +5,8 @@ defmodule CommodityGameApi.Repo.Migrations.CreateCommodity do
     create table(:commodities) do
       add :name, :string
       add :scarcity, :decimal
-      add :commodity_set_id, references(:commodity_sets, on_delete: :nothing)
+      add :image, :string
+      add :commodity_set_id, references(:commodity_sets, on_delete: :delete_all)
 
       timestamps()
     end

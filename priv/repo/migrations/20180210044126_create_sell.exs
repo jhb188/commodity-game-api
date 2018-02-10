@@ -5,9 +5,9 @@ defmodule CommodityGameApi.Repo.Migrations.CreateSell do
     create table(:sells) do
       add :amount, :integer
       add :open, :boolean, default: false, null: false
-      add :commodity_id, references(:commodities, on_delete: :nothing)
-      add :user_id, references(:users, on_delete: :nothing)
-      add :commodity_item_id, references(:commodity_items, on_delete: :nothing)
+      add :commodity_id, references(:commodities, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :commodity_item_id, references(:commodity_items, on_delete: :delete_all)
 
       timestamps()
     end

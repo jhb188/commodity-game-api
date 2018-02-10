@@ -3,8 +3,8 @@ defmodule CommodityGameApi.Repo.Migrations.CreateCommodityItem do
 
   def change do
     create table(:commodity_items) do
-      add :commodity_id, references(:commodities, on_delete: :nothing)
-      add :user_id, references(:users, on_delete: :nothing)
+      add :commodity_id, references(:commodities, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end

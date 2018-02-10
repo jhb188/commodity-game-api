@@ -9,3 +9,119 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will halt execution if something goes wrong.
+require List
+
+Faker.start
+
+defmodule CommodityGameApi.DatabaseSeeder do
+  alias CommodityGameApi.Repo
+  alias CommodityGameApi.User
+  alias CommodityGameApi.CommoditySet
+  alias CommodityGameApi.Commodity
+  alias CommodityGameApi.CommodityItem
+  alias CommodityGameApi.Buy
+  alias CommodityGameApi.Sell
+
+  @models [
+    User,
+    CommoditySet,
+    Commodity,
+    CommodityItem,
+    Buy,
+    Sell,
+  ]
+
+  def clear do
+    @models |> Enum.each(fn m -> Repo.delete_all m end)
+  end
+
+  def insert_user do
+    Repo.insert! User.changeset(%User{}, %{
+      username: Faker.Name.first_name <> Faker.String.base64,
+      email: Faker.Internet.email,
+      password: "password",
+      currency_units: Enum.random(0..1000),
+    })
+  end
+
+  def insert_commodity_set do
+    Repo.insert! %CommoditySet{
+      name: Faker.Pokemon.location,
+    }
+  end
+
+  def insert_commodity(commodity_set_id) do
+    Repo.insert! %Commodity{
+      name: Faker.Superhero.name,
+      scarcity: Enum.random(0..10000) / 100,
+      image: Faker.Avatar.image_url(200, 200),
+      commodity_set_id: commodity_set_id,
+    }
+  end
+
+  def insert_commodity_item(user_id, commodity_id) do
+    Repo.insert! %CommodityItem{
+      user_id: user_id,
+      commodity_id: commodity_id,
+    }
+  end
+
+  def insert_buy(user, commodity_id) do
+    Repo.insert! %Buy{
+      user_id: user.id,
+      commodity_id: commodity_id,
+      amount: Enum.random(0..user.currency_units),
+      open: random_bool(),
+    }
+  end
+
+  def insert_sell(commodity_item) do
+    Repo.insert! %Sell{
+      user_id: commodity_item.user_id,
+      commodity_item_id: commodity_item.id,
+      commodity_id: commodity_item.commodity_id,
+      amount: Enum.random(1001..999999),
+      open: random_bool(),
+    }
+  end
+
+  def random_bool() do
+    Enum.random(0..1) == 1
+  end
+end
+
+CommodityGameApi.DatabaseSeeder.clear()
+
+users = for _ <- 1..1000,
+  do: CommodityGameApi.DatabaseSeeder.insert_user()
+
+commodity_sets = for _ <- 1..20,
+  do: CommodityGameApi.DatabaseSeeder.insert_commodity_set()
+
+# TODO: do this cleanly, without defining a temp variable
+commodity_groups = for s <- commodity_sets,
+  do: for _ <- 1..Enum.random(5..25),
+    do: CommodityGameApi.DatabaseSeeder.insert_commodity(s.id)
+
+commodities = List.flatten(commodity_groups)
+
+# TODO: do this cleanly, without defining a temp variable
+commodity_item_groups = for c <- commodities,
+  do: for _ <- 1..Enum.random(2..1000),
+    do: CommodityGameApi.DatabaseSeeder.insert_commodity_item(
+      Enum.random(users).id,
+      c.id
+    )
+
+commodity_items = List.flatten(commodity_item_groups)
+
+buys = for c <- commodities,
+  do: for u <- users,
+    Enum.random(1..10) == 1,
+    do: CommodityGameApi.DatabaseSeeder.insert_buy(u, c.id)
+
+sells = for c <- commodities,
+  do: for u <- users, CommodityGameApi.DatabaseSeeder.random_bool(),
+    do: Enum.filter(commodity_items, fn ci -> ci.user_id == u.id && ci.commodity_id == c.id end)
+      |> List.first
+      |> (fn first_ci -> if first_ci != nil, do: CommodityGameApi.DatabaseSeeder.insert_sell(first_ci) end).()

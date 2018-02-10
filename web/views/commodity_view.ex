@@ -10,9 +10,12 @@ defmodule CommodityGameApi.CommodityView do
   end
 
   def render("commodity.json", %{commodity: commodity}) do
-    %{id: commodity.id,
+    %{
+      id: commodity.id,
       name: commodity.name,
       scarcity: commodity.scarcity,
-      commodity_set_id: commodity.commodity_set_id}
+      commodity_set_id: commodity.commodity_set_id,
+      image: commodity.image,
+    }
   end
 end
