@@ -4,7 +4,9 @@ defmodule CommodityGameApi.CommodityItemController do
   alias CommodityGameApi.CommodityItem
 
   def index(conn, _params) do
-    commodity_items = Repo.all(CommodityItem)
+    user = Guardian.Plug.current_resource(conn)
+
+    commodity_items = Repo.all(from ci in CommodityItem, where: ci.user_id == ^user.id)
     render(conn, "index.json", commodity_items: commodity_items)
   end
 
