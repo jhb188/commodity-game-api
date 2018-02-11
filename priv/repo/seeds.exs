@@ -55,7 +55,7 @@ defmodule CommodityGameApi.DatabaseSeeder do
     Repo.insert! %Commodity{
       name: Faker.Superhero.name,
       scarcity: Enum.random(0..10000) / 100,
-      image: Faker.Avatar.image_url(200, 200),
+      image: Faker.Avatar.image_url(290, 290),
       commodity_set_id: commodity_set_id,
     }
   end
