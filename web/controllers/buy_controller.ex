@@ -3,9 +3,41 @@ defmodule CommodityGameApi.BuyController do
 
   alias CommodityGameApi.Buy
 
-  def index(conn, _params) do
-    buys = Repo.all(Buy)
+  def index(conn, %{"sort" => sort, "commodity_id" => commodity_id}) do
+    # TODO: abstract validation into custom plug
+    order_by = case sort do
+      "amount" -> [asc: :amount]
+      "-amount" -> [desc: :amount]
+      _ ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{ message: "'sort' must be one of ['-amount','amount']" })
+    end
+
+    buys_with_users = from b in Buy,
+      where: b.commodity_id == ^commodity_id,
+      order_by: ^order_by,
+      order_by: [asc: :inserted_at],
+      limit: 25,
+      join: u in CommodityGameApi.User,
+      where: u.id == b.user_id
+
+    buys = Repo.all(
+      from [b, u] in buys_with_users, select: %{
+        id: b.id,
+        commodity_id: b.commodity_id,
+        amount: b.amount,
+        username: u.username,
+      }
+    )
+
     render(conn, "index.json", buys: buys)
+  end
+
+  def index(conn, _params) do
+    conn
+    |> put_status(:bad_request)
+    |> json(%{ message: "'sort' and 'commodityId' params are required" })
   end
 
   def create(conn, %{"buy" => buy_params}) do

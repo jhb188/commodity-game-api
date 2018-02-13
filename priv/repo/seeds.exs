@@ -71,7 +71,7 @@ defmodule CommodityGameApi.DatabaseSeeder do
     Repo.insert! %Buy{
       user_id: user.id,
       commodity_id: commodity_id,
-      amount: Enum.random(0..user.currency_units),
+      amount: Enum.random(1..user.currency_units),
     }
   end
 
